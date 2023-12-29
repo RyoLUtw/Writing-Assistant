@@ -1,0 +1,296 @@
+<!--Beta V1.4-->
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Writing Assistant</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <script src="diff_match_patch.js"></script>
+
+  <div class="titleContainer">
+    <img class="responsive-img" src="Title.jpg">
+  </div>
+
+  <div class="tab">
+    <div class="tablinks-container">
+      <div class="tablinks-wrapper">
+        <button id="loadStudySet" class="tablinks" onclick="(
+          function(){
+          listLocalStorage();
+          openTab(event, 'Tab0')
+
+        })()">載入批改結果</button>
+        <button id="tabButtonStep1" class="tablinks" onclick="openTab(event, 'Tab1')">步驟1<br>輸入文章</button>
+        <button id="tabButtonStep2" class="tablinks" onclick="openTab(event, 'Tab2')">步驟2<br>單句修改</button>
+        <button id="tabButtonStep3" class="tablinks" onclick="openTab(event, 'Tab3')">步驟3<br>訂正練習</button>
+        <button id="tabButtonStep4" class="tablinks" onclick="openTab(event, 'Tab4')">步驟4<br>全文修改</button>
+        <button id="tabButtonStep5" class="tablinks" onclick="openTab(event, 'Tab5')">步驟5<br>範文臨摹</button>
+        <button id="tabButtonStep5" class="tablinks" onclick="openTab(event, 'Tab6')">步驟6<br>儲存批改結果</button>
+        <button id="tabButtonLocalStorage" class="tablinks" onclick="(function(){
+        tableLocalStorageFiles();
+        openTab(event, 'Tab7')
+        })()">管理批改結果</button>
+        <!--<button id="tabButtonStep5" class="tablinks" onclick="openTab(event, 'Tab5')">步驟5<br>造句練習</button>-->
+      </div>
+    </div>
+  </div>
+  <!-- Step0 -->
+  <div id="Tab0" class="tabcontent">
+    <h3>從瀏覽器載入學習集</h3>
+    <p>(請點選下拉式選單，並選擇之前保存於瀏覽器儲存空間的學習集)</p>
+    <select id="set-select" style="font-size: x-large;"></select>
+    <button class="regularButton" onclick="loadStudySetFromLocalStorage()">載入選擇的學習集</button>
+    <br>
+    <hr><br>
+    <h3>從裝置載入學習集</h3>
+    <p>(請點選「瀏覽裝置」按鈕，並選擇保存於裝置的學習集)</p>
+    <button class="dominantButton" onclick="loadStudySetFromDevice(event)">瀏覽裝置</button>
+    <br>
+    <hr><br>
+    <h3>復原前次暫存</h3>
+    <p>若想繼續上次中斷之學習，請點選「復原」按鈕</p>
+    <button class="regularButton" onclick="loadPrevResultFromLocalStorage()">復原</button>
+  </div>
+  <!-- Step1 -->
+  <div id="Tab1" class="tabcontent">
+    <h3>請在下方輸入/貼上你要修改的文章</h3>
+    <p>貼上後，請點選「載入文章」。</p>
+    <hr><br>
+    <div id="loadTextContainer">
+      <textarea style="height: 100px; width: 100%; font-size: 12px;" id="inputText" placeholder="請貼上文章"
+        style="text-align: left; vertical-align: top;"></textarea>
+      <div style="width:100%; display:flex; justify-content: space-between; text-align: left;">
+        <button id="loadTextButton" class="dominantButton" onclick="loadText()">載入文章</button>
+
+
+        <button class="regularButton" onclick="clearText()">清空輸入內容</button>
+
+      </div>
+    </div>
+    <div id="apiKeyContainer" class="hiddenDiv">
+      <div>
+        <input value="" style="height: 30px; width: 100%; font-size: large;" type="text" id="APIkey"
+          placeholder="請輸入API金鑰">
+      </div>
+      <div class="hiddenDiv" id="correctingMessage">
+        <p>文章批改中...</p>
+      </div>
+      <div>
+        <button id="correctArticleButton" onclick="tab1ToTab2()" class="regularButton">批改文章</button>
+      </div>
+    </div>
+    <br>
+    <hr>
+    <div class="hiddenDiv" id="processedDisplay">
+      <h2>載入結果:</h2>
+      <div id="processedTextContainer"></div>
+    </div>
+
+
+  </div>
+
+  <!-- Step2 -->
+  <div id="Tab2" class="tabcontent">
+    <h3>單字/文法錯誤</h3>
+    <p>針對單一句子進行單字/文法檢查，並修正贅字，請參考下列修改建議，並點選「+」符號，標註錯誤類型。</p>
+    <p>*若要刪除錯誤標籤，請從選單中選擇「無」</p>
+    <hr><br>
+    <button class="regularButton" id="toggleColumnButton" onclick="displayOriSen()"
+      style="margin-bottom: 10px;">顯示原始句子</button>
+    <table id="comparison-table" class="table mt-4">
+      <thead>
+        <tr>
+          <th>原始句子</th>
+          <th>修改建議</th>
+          <th style="text-align: center;">錯誤原因</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Table rows will be dynamically generated here -->
+      </tbody>
+    </table>
+  </div>
+
+
+
+  <!-- Step3 -->
+  <div id="Tab3" class="tabcontent">
+    <h3>訂正拼字與文法錯誤</h3>
+    <p>透過改正自己寫錯的句子，強化印象，並訓練自己檢查錯誤的能力。</p>
+    <hr>
+    <button id="startCorrectionButton" class="dominantButton" onclick="startCorrectionPractice()">開始練習</button>
+    <div class="hiddenDiv" id="correctionContainer">
+      <div style="text-align: center;">
+        <select id="senSelect" style="font-size: x-large;" onchange="changeSen()"></select>
+      </div>
+      <div class="errorTagSection">
+        <h3 style="margin-top: 3px;">錯誤類型</h3>
+        <div id="tagContainer" style="display:flex; margin:10px">
+        </div>
+      </div>
+      <button class="regularButton" onclick="showHint()">顯示提示</button>
+      <div id="hintContainer" style="display:none; font-size: large">
+        <p id="hint"></p>
+      </div>
+      <div>
+        <textarea id="correctionInput"
+          style="width:100%; height:100px ;margin-top: 10px; display:inline-block; font-size: large ;border: 1px solid #ffb74b"></textarea>
+      </div>
+
+      <div class="button-container-right">
+        <button class="regularButton" id="checkInputButton" onclick="checkCorrection()">批改</button>
+      </div>
+      <div id="checkResultContainer" class="hiddenDiv">
+        <h3>批改結果:</h3>
+        <p id="checkResult" style="font-size: large;"></p>
+      </div>
+      <div class="button-container-right" id="afterCheckContainer" style="display:none;">
+        <button class="dominantButton" id="checkInputButton" onclick="retryCorrection()">再試一次</button>
+        <button class="dominantButton" id="checkInputButton" onclick="nextSentence()">下一句</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step4 -->
+  <div id="Tab4" class="tabcontent">
+    <h3>結構及語句通順度加強</h3>
+    <p>本步驟注重段落層級的提升，好文章需要分明的結構，且句子與句子間需有明確的關聯性，並藉由合併句子、贅字省略來避免重複，使文章更簡潔明瞭。</p>
+    <hr>
+
+    <button id="startStep4Button" class="dominantButton" onclick="startStep4()">開始加強</button>
+    <div class="hiddenDiv" id="TextpreviewContainer" style="margin-bottom: 10px;">
+      <h3>以下為修改過單句中文法及用字的文章，但尚未針對結構及連貫性進行修改，請點選「開始修改全文」。</h3>
+    </div>
+    <div style="text-align: center;">
+      <button id="dispModifiedText" class="regularButton hiddenDiv" onclick="dispOriText()">顯示修改前段落</button>
+    </div>
+    <p id="modifiedText"></p>
+    <div class="hiddenDiv" id="correctingMessageStep4">
+      <p>全文批改中...</p>
+    </div>
+    <button id="startRevision" class="dominantButton hiddenDiv" onclick="startRevision()">開始修改全文</button>
+    <div class="hiddenDiv" id="revisedVersionContainer">
+      <h3>修改後段落:</h3>
+      <div style="text-align: center;">
+        <select id="RtParagraphSelect" onchange="goToParagraphStep4()" style="font-size: x-large;"></select>
+      </div>
+      <br>
+      <p id="RtParagraph"></p>
+    </div>
+
+  </div>
+
+  <!-- Step5 -->
+  <div id="Tab5" class="tabcontent">
+    <h3>內化新學習到的用語</h3>
+    <p>再次閱讀修改完的範文，並標記出你想要學習的用法，最後試著使用新學到的用語，再重新撰寫一次文章，加強印象。</p>
+    <hr>
+
+    <button id="startReadingButton" class="dominantButton" onclick="genExampleReading()">開始閱讀</button>
+    <div id="exPassageContainer" class="hiddenDiv">
+      <div style="text-align: center;">
+        <select id="duplicatedSelect" onchange="goToParagraphStep5()" style="font-size: large;"></select>
+      </div>
+      <p id="spannedText" style="font-size: large;"></p>
+    </div>
+    <div id="practiceSettingsContainer" class="hiddenDiv"
+      style="border: 1px solid black; padding: 10px; border-radius: 5px; margin: 10px">
+      <div style="text-align: center;">
+        <h3 style="margin-top:0px; margin-bottom: 5px;">練習設定</h3>
+      </div>
+      <label name="hintType">提示類型:</label>
+      <label>
+        <input type="radio" name="hintType" value="normal" checked>
+        一般提示
+      </label>
+
+      <label>
+        <input type="radio" name="hintType" value="blanked">
+        模糊提示
+      </label>
+
+      <br><label name="inputContent">練習方式:</label>
+      <label>
+        <input type="radio" name="inputContent" value="2" checked>
+        填空練習
+      </label>
+      <label>
+        <input type="radio" name="inputContent" value="1">
+        從原始文章修改
+      </label>
+
+      <label>
+        <input type="radio" name="inputContent" value="0">
+        整段重寫
+      </label>
+      <div class="button-container-right">
+        <button class="dominantButton" onclick="startRewrite()">開始練習</button>
+      </div>
+
+    </div>
+    <div id="blankedExPassageContainer" class="hiddenDiv">
+      <p id="blankedExPassage"></p>
+      <button class="regularButton" id="returnButtonBlank" onclick="showPracticeOptions()">返回</button>
+      <button id="checkBlankedExPassage" class="dominantButton" onclick="checkBlanks()">批改</button>
+    </div>
+    <div id="rewriteElementsContainer" class="hiddenDiv">
+      <p id="targetUsage"></p>
+      <br><textarea id="UserInputStep5"
+        style="width: 100%; height: 500px; font-size: larger; line-height: 1.5;"></textarea>
+      <div id="rewriteButtonContainer">
+        <button class="regularButton" id="returnButtonRewrite" onclick="showPracticeOptions()">返回</button>
+        <button class="regularButton" id="compareButton" onclick="compareToExPassage()">與範文比較</button>
+      </div>
+      <div id="compareResultContainer" class="hiddenDiv">
+        <h3>比較結果:</h3>
+        <p id="compareResult" style="font-size: larger;"></p>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="script.js"></script>
+
+
+  <!-- Step6 -->
+  <div id="Tab6" class="tabcontent">
+    <h3>儲存學習集</h3>
+    <p>將本次的例句、定義、中文翻譯儲存到您的裝置，以便日後進行複習。</p>
+    <hr>
+    <div class="grid-container">
+      <div class="grid-item" style="grid-column: 1; grid-row: 1; text-align: left;">
+        <label for="fileName" style="font-weight: bold; font-size: x-large;">學習集名稱:</label><br>
+        <input name="fileName" id="fileName" style="width:100%; font-size: x-large;"></input>
+      </div>
+
+      <div class="grid-item" style="grid-column: 2; grid-row: 1; text-align: right;">
+        <button id="saveStudySet" class="regularButton" style="display: inline-block; margin: 10px; width:100%;"
+          onclick="saveStudySetToLocalStorage()">儲存至瀏覽器</button>
+        <br><button id="saveStudySet" class="dominantButton" style="display: inline-block; margin: 10px; width:100%;"
+          onclick="saveStudySetToDevice()">儲存至裝置</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- localStorage Manager -->
+  <div id="Tab7" class="tabcontent">
+    <h1>學習集管理員</h1>
+
+    <h2>瀏覽器內的學習集</h2>
+    <table id="fileTable">
+      <tr>
+        <th>選取</th>
+        <th>學習集名稱</th>
+      </tr>
+    </table>
+
+    <button class="regularButton" onclick="deleteSelectedFiles()">刪除選取的學習集</button>
+  </div>
+  </div>
+</body>
+
+</html>

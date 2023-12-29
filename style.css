@@ -1,0 +1,209 @@
+/*Beta V1.4*/
+/* Style the tab */
+.responsive-img {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+}
+
+.titleContainer {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  overflow: hidden;
+}
+
+.tab {
+  border: 1px solid #ccc;
+  border-bottom: 1px solid#202c75;
+  background-color: #f5f5f5;
+  /* Set the height of the container */
+  overflow-scrolling: touch;
+  /* Enable momentum-based scrolling on Android */
+  -webkit-overflow-scrolling: touch;
+  /* Enable smooth scrolling on iOS */
+  max-width: 525px;
+}
+
+.tablinks-container {
+  overflow-x: auto;
+  max-width: 500px;
+}
+
+.tablinks-wrapper {
+  display: flex;
+  width: 925px;
+  /* Set the width to a fixed value */
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+.tab button br {
+  content: "";
+  display: block;
+  margin: 10px 0;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: white;
+  color: #1e2134;
+  font-weight: 500;
+  border-top: 5px solid #f19926;
+  border-left: 1px solid #f19926;
+  border-right: 1px solid #f19926;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  max-width: 500px;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+
+.hiddenDiv {
+  display: none;
+}
+
+.regularButton {
+  padding: 10px;
+  font-size: medium;
+  margin-top: 10px;
+  margin-left: 5px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: #eeeded;
+}
+
+.regularButton:hover {
+background-color: #ddd;
+}
+
+.dominantButton {
+  padding: 10px;
+  font-size: medium;
+  margin-top: 10px;
+  margin-left: 5px;
+  background-color: #fda859;
+  color: black;
+  font-weight: 500;
+  border-radius: 8px;
+  border: 1px solid rgb(109, 109, 109);  
+}
+
+.dominantButton:hover {
+  background-color: #ff8953;
+  }
+
+.button-container {
+  display: flex;
+  align-items: center;
+}
+
+.button-container-right {
+  text-align: right;
+}
+
+.button-container-left {
+  text-align: left;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(1, auto);
+  grid-template-rows: repeat(1, 1fr);
+  grid-gap: 1px;
+  align-items: center;
+  text-align: left;
+}
+
+.grid-item {
+  padding: 5px;
+  text-align: center;
+  font-size: large;
+}
+
+mark {
+  font-weight: bolder !important;
+  background-color: #fcf873;
+}
+
+.highlighted {
+  background-color: yellow;
+}
+
+.highlight {
+  background-color: yellow;
+  cursor: pointer;
+}
+
+.popup {
+  position: absolute;
+  left: 10px;
+  background-color: #f5f5f5;
+  padding: 10px;
+  border: 1px solid gray;
+  display: none;
+}
+
+.hiddenDropdown {
+  font-Size: xx-large;
+  text-Align: center;
+  display: inline-block;
+}
+
+.navigateButton {
+  height: 40px;
+  width: 40px;
+  display: inline-block;
+}
+
+table {
+  border-collapse: collapse;
+  table-layout: auto;
+
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: middle;
+}
+
+.tag {
+  border: 1px solid black;
+  background-color: rgb(225, 54, 54);
+  color: white;
+  font-weight: bolder;
+  padding: 10px;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+
+.errorTagSection {
+  background-color: rgb(241, 241, 241);
+  border: black;
+  border: 1px solid rgb(189, 189, 189);
+  border-radius: 10px;
+  padding: 1px;
+  margin: 10px;
+  text-align: center;
+}
